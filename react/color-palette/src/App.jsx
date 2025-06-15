@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 import PaletteCard from "./components/PaletteCard";
 
@@ -77,12 +78,23 @@ const palettes = [
 ];
 
 function App() {
+    const [selectedColor, setSelectedColor] = useState("white");
+
     return (
-        <div className="app">
+        <div className="app" style={selectedColor ? { background: selectedColor } : undefined}>
             <h1>Color Palette</h1>
             <div className="palettes-grid">
                 {palettes.map((palette, i) => (
-                    <PaletteCard key={"palette" + i} from={palette.from} to={palette.to} />
+                    <PaletteCard
+                        key={"palette" + i}
+                        from={palette.from}
+                        to={palette.to}
+                        onClick={() => {
+                            setSelectedColor(
+                                `linear-gradient(135deg, ${palette.from}, ${palette.to})`
+                            );
+                        }}
+                    />
                 ))}
             </div>
         </div>
