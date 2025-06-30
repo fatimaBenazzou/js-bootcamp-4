@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@plugin "daisyui";
+@plugin "@iconify/tailwind4";
+
+@theme {
+    --color-brightBlue: #3a7bfd;
+    --color-brightGreen: #57ddff;
+    --color-purplePink: #c058f3;
+    --color-bodyBg: #161722;
+    --color-cardBg: #25273c;
+    --color-placeholderColor: #4d5066;
+    --color-lightGrayishBlue: #cacde8;
+}
