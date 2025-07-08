@@ -4,13 +4,12 @@ import Books from "./pages/Books";
 import BookDetails from "./pages/BookDetails";
 import NotFound from "./pages/NotFound";
 import AuthLayout from "./layouts/AuthLayout";
-import { useState } from "react";
 import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
+import { useSelector } from "react-redux";
 
 export default function Routers() {
-    const [isLoggedIn /* setIsLoggedIn */] = useState(false);
-
+    const { isAuthenticated } = useSelector((state) => state.auth);
     return (
         <Routes>
             {/* Public routes */}
@@ -20,14 +19,14 @@ export default function Routers() {
                 <Route path="*" element={<NotFound />} />
             </Route>
             {/* Auth Routes */}
-            <Route path="/auth" element={!isLoggedIn ? <AuthLayout /> : <Navigate to="/" />}>
+            <Route path="/auth" element={!isAuthenticated ? <AuthLayout /> : <Navigate to="/" />}>
                 <Route index element={<Navigate to="login" />} />
                 <Route path="login" element={<Login />} />
             </Route>
             {/* Private Routes */}
             <Route
                 path="/user"
-                element={isLoggedIn ? <MainLayout /> : <Navigate to="/auth/login" />}
+                element={isAuthenticated ? <MainLayout /> : <Navigate to="/auth/login" />}
             >
                 <Route path="profile" element={<Profile />} />
                 <Route path="favorites" element={<Favorites />} />
