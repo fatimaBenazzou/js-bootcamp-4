@@ -1,5 +1,72 @@
 import React, { useState } from "react";
 
+const details = [
+    {
+        icon: "icon-[wi--humidity]",
+        value: (weatherData) => `${weatherData.main.humidity}%`,
+    },
+    {
+        icon: "icon-[wi--strong-wind]",
+        value: (weatherData) => `${weatherData.wind.speed} m/s`,
+    },
+    {
+        icon: "icon-[wi--barometer]",
+        value: (weatherData) => `${weatherData.main.pressure} hPa`,
+    },
+    {
+        icon: "icon-[wi--cloudy]",
+        value: (weatherData) => `${weatherData.clouds.all}%`,
+    },
+];
+
+const getWeatherIcon = (weather) => {
+    switch (weather) {
+        case "Clear":
+            return "icon-[wi--day-sunny]";
+        case "Clouds":
+            return "icon-[wi--cloudy]";
+        case "Rain":
+            return "icon-[wi--rain]";
+        case "Snow":
+            return "icon-[wi--snow]";
+        case "Thunderstorm":
+            return "icon-[wi--thunderstorm]";
+        case "Drizzle":
+            return "icon-[wi--showers]";
+        case "Mist":
+            return "icon-[mdi--weather-mist]";
+        case "Smoke":
+            return "icon-[mdi--smoke]";
+        case "Haze":
+            return "icon-[mdi--weather-hazy]";
+        case "Dust":
+            return "icon-[mdi--weather-dust]";
+        case "Fog":
+            return "icon-[mdi--weather-fog]";
+        case "Tornado":
+            return "icon-[mdi-weather-tornado]";
+        default:
+            return "icon-[wi--day-sunny]";
+    }
+};
+
+const getBackgrooundColor = (weather) => {
+    switch (weather) {
+        case "Clear":
+            return "from-orange-300 to-yellow-300";
+        case "Clouds":
+            return "from-gray-300 to-blue-300";
+        case "Rain":
+            return "from-blue-300 to-indigo-500";
+        case "Snow":
+            return "from-white to-blue-200";
+        case "Thunderstorm":
+            return "from-gray-700 to-black";
+        default:
+            return "from-gray-300 to-blue-300";
+    }
+};
+
 export default function App() {
     const [weatherData, setWeatherData] = useState(null);
     const [city, setCity] = useState("Alger");
@@ -30,17 +97,57 @@ export default function App() {
 
     console.log({ weatherData });
     return (
-        <main>
-            <form onSubmit={handleSearch}>
-                <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder="Enter a city"
-                />
-                <button type="submit">🔍</button>
-            </form>
-            {weatherData && <div>{weatherData.main.temp}</div>}
+        <main className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+            <section className="w-full max-w-md ">
+                <form onSubmit={handleSearch} className="flex gap-4 items-center mb-4">
+                    <input
+                        type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        placeholder="Enter a city"
+                        className="input bg-white text-black rounded-full flex-1"
+                    />
+                    <button className="btn bg-white btn-circle border-0 text-black" type="submit">
+                        🔍
+                    </button>
+                </form>
+                {weatherData && (
+                    <div
+                        className={`rounded-lg shadow-lg p-6 text-white bg-gradient-to-b ${getBackgrooundColor(
+                            weatherData.weather[0].main
+                        )}`}
+                    >
+                        {/* main infos */}
+                        <div className="flex flex-col items-center gap-4">
+                            {/* icon */}
+                            <span
+                                className={`w-16 h-16 ${getWeatherIcon(
+                                    weatherData.weather[0].main
+                                )}`}
+                            ></span>
+                            {/* city + weather description */}
+                            <div className="text-center">
+                                <h2 className="text-2xl font-bold">{weatherData.name}</h2>
+                                <p className="text-sm">{weatherData.weather[0].description}</p>
+                            </div>
+                            {/* temp */}
+                            <p className="text-6xl font-bold">
+                                {Math.round(weatherData.main.temp)}°C
+                            </p>
+                        </div>
+
+                        {/* details */}
+                        <ul className="grid grid-cols-2 gap-4 mt-6">
+                            {details.map((detail, index) => (
+                                <li key={detail.icon + index} className="flex items-center gap-2">
+                                    <span className={`w-6 h-6 ${detail.icon}`}></span>
+                                    <p>{detail.value(weatherData)}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </section>
         </main>
     );
 }
