@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { getWeather } from "./api/endpoints/weather";
 
 const details = [
     {
@@ -70,32 +71,48 @@ const getBackgrooundColor = (weather) => {
 export default function App() {
     const [weatherData, setWeatherData] = useState(null);
     const [city, setCity] = useState("Alger");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    const fetchWeater = async () => {
+    const fetchWeather = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const response = await fetch(
-                `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${
-                    import.meta.env.VITE_API_KEY
-                }&units=metric`
-            );
-            const data = await response.json();
-            if (data.cod === 200) {
-                setWeatherData(data);
+            // const response = await fetch(
+            //     `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${
+            //         import.meta.env.VITE_API_KEY
+            //     }&units=metric`
+            // );
+            // const data = await response.json();
+            // if (data.cod === 200) {
+            //     setWeatherData(data);
+            // } else {
+            //     throw new Error("Ville non trouvee");
+            // }
+            const response = await getWeather({ city });
+
+            if (response.status === 200) {
+                setWeatherData(response.data);
             } else {
                 throw new Error("Ville non trouvee");
             }
         } catch (error) {
-            console.error(error.message);
+            setError("Erreur lors de la récuperation de données " + error.message);
+        } finally {
+            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchWeather();
+    }, []);
 
     const handleSearch = (e) => {
         e.preventDefault();
 
-        fetchWeater();
+        fetchWeather();
     };
 
-    console.log({ weatherData });
     return (
         <main className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
             <section className="w-full max-w-md ">
@@ -107,11 +124,22 @@ export default function App() {
                         placeholder="Enter a city"
                         className="input bg-white text-black rounded-full flex-1"
                     />
-                    <button className="btn bg-white btn-circle border-0 text-black" type="submit">
-                        🔍
+                    <button
+                        disabled={loading}
+                        className="btn bg-white btn-circle border-0 text-black"
+                        type="submit"
+                    >
+                        {loading ? (
+                            <span className="loading loading-spinner"></span>
+                        ) : (
+                            <span className="w-5 h-5 icon-[bi--search]"></span>
+                        )}
                     </button>
                 </form>
-                {weatherData && (
+
+                {error && <p className="text-red-500 text-center">{error}</p>}
+
+                {weatherData && weatherData.cod === 200 && (
                     <div
                         className={`rounded-lg shadow-lg p-6 text-white bg-gradient-to-b ${getBackgrooundColor(
                             weatherData.weather[0].main
