@@ -22,10 +22,12 @@ function App() {
         } else if (wordToGuess.split("").every((letter) => guessedLetters.includes(letter))) {
             setGameState("won");
         }
-    });
+    }, [incorrectLetters, wordToGuess, guessedLetters]);
 
     const resetGame = useCallback(() => {
-        setGuessedLetters([]), setWordToGuess(getRandomWord()), setGameState("playing");
+        setGuessedLetters([]);
+        setWordToGuess(getRandomWord());
+        setGameState("playing");
     }, []);
 
     const addGuessedLetter = useCallback(
