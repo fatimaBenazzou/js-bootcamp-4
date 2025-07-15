@@ -1,0 +1,32 @@
+.hangman-word {
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+    font-size: 4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+.letter-container {
+    min-width: 1em;
+    text-align: center;
+    border-bottom: var(--primary-color) solid 6px;
+}
+
+.revealed-letter {
+    animation: popIn 0.3s ease-out forwards;
+    color: var(--losing-color) !important;
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

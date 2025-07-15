@@ -1,0 +1,32 @@
+.hangman-structure {
+    position: relative;
+}
+
+.gallows-top {
+    height: 50px;
+    width: 10px;
+    background: var(--primary-color);
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.rope {
+    height: 10px;
+    width: 200px;
+    background: var(--primary-color);
+    margin-left: 120px;
+}
+
+.post {
+    height: 400px;
+    width: 10px;
+    background: var(--primary-color);
+    margin-left: 120px;
+}
+
+.base {
+    height: 10px;
+    width: 250px;
+    background: var(--primary-color);
+}
